@@ -52,7 +52,7 @@ export async function appRoutes(app: FastifyInstance) {
       },
     });
 
-    const day = await prisma.day.findUnique({
+    const day = await prisma.day.findFirst({
       where: {
         date: parsedDate.toDate(),
       },
@@ -61,9 +61,10 @@ export async function appRoutes(app: FastifyInstance) {
       },
     });
 
-    const completedHabits = day?.dayHabits.map((dayHabit) => {
-      return dayHabit.habit_id;
-    });
+    const completedHabits =
+      day?.dayHabits.map((dayHabit) => {
+        return dayHabit.habit_id;
+      }) ?? [];
 
     return {
       possibleHabits,
@@ -133,10 +134,10 @@ export async function appRoutes(app: FastifyInstance) {
       (
         SELECT
         cast(COUNT(*) as float)
-        FROM habit_week_days HWD
-        JOIN habits H ON H.id = HWD.habit_id
+        FROM habit_week_days HDW
+        JOIN habits H ON H.id = HDW.habit_id
         WHERE 
-          HWD.week_day = cast(strftime('%w', D.date/1000.0, 'unixepoch') as int)
+          HDW.week_day = cast(strftime('%w', D.date/1000.0, 'unixepoch') as int)
           AND H.created_at <= D.date 
       ) as amount
         FROM days D
