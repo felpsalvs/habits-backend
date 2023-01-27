@@ -14,8 +14,8 @@ model Habit {
   id         String   @id @default(uuid())
   title      String
   created_at DateTime
-  DayHabit      DayHabit[]
-  HabitWeekDays HabitWeekDays[]
+  dayHabits      DayHabit[]
+  weekDays HabitWeekDays[]
   @@map("habits")
 }
 
@@ -24,8 +24,6 @@ model HabitWeekDays {
   habit_id String
   week_day Int
   habit Habit   @relation(fields: [habit_id], references: [id])
-  Day   Day?    @relation(fields: [dayId], references: [id])
-  dayId String?
   @@unique([habit_id, week_day])
   @@map("habit_week_days")
 }
@@ -33,8 +31,7 @@ model HabitWeekDays {
 model Day {
   id   String   @id @default(uuid())
   date DateTime
-  dayHabit DayHabit[]
-  weekDays HabitWeekDays[]
+  dayHabits DayHabit[]
   @@unique([date])
   @@map("days")
 }
@@ -47,8 +44,4 @@ model DayHabit {
   habit Habit @relation(fields: [habit_id], references: [id])
   @@unique([day_id, habit_id])
   @@map("day_habits")
-}
-
-generator erd {
-  provider = "prisma-erd-generator"
 }
