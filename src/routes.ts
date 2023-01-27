@@ -1,7 +1,7 @@
-import { FastifyInstance } from "fastify";
-import { prisma } from "./lib/prisma";
-import { z } from "zod";
 import dayjs from "dayjs";
+import { FastifyInstance } from "fastify";
+import { z } from "zod";
+import { prisma } from "./lib/prisma";
 
 export async function appRoutes(app: FastifyInstance) {
   app.post("/habits", async (request) => {
@@ -122,7 +122,7 @@ export async function appRoutes(app: FastifyInstance) {
 
   app.get("/summary", async () => {
     const summary = await prisma.$queryRaw`
-    SELECT 
+      SELECT 
         D.id, 
         D.date,
         (
@@ -142,7 +142,8 @@ export async function appRoutes(app: FastifyInstance) {
             AND H.created_at <= D.date
         ) as amount
       FROM days D
-  `
+    `;
+
     return summary;
   });
 }

@@ -6,12 +6,11 @@ import { notificationRoutes } from "./notifications-routes";
 const app = Fastify();
 
 app.register(cors);
-app.register(appRoutes)
-app.register(notificationRoutes)
+app.register(appRoutes);
+app.register(notificationRoutes);
 app
   .listen({
     port: 3000,
-    host: "0.0.0.0",
   })
   .then(() => {
     console.log("Server started");
